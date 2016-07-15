@@ -51,10 +51,6 @@ RUN apt-get update -q && apt-get upgrade -q && \
     xmlstarlet \
     xsltproc
 
-#Install Odoo
-RUN /bin/bash -c "mkdir -p /home/odoo"
-RUN cd /home/odoo && git clone -b 9.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-
 # Install wkhtmltopdf
 RUN cd /tmp && \
     wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
@@ -64,35 +60,28 @@ RUN cd /tmp && \
 RUN ln -s /usr/bin/nodejs /usr/bin/node && \
     npm install -g less less-plugin-clean-css
 
-RUN pip install SOAPpy suds xmltodict simplejson M2Crypto
-
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
     wget -q https://raw.githubusercontent.com/odoo/odoo/9.0/requirements.txt && \
     pip install -r requirements.txt
 
+#Python Libraries
+RUN pip install SOAPpy suds xmltodict simplejson M2Crypto
+
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
+#Install Odoo
+RUN cd /home && git clone -b 9.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
+
 # Add user
-RUN adduser --home=/opt/odoo --disabled-password --gecos "" --shell=/bin/bash odoo
+RUN adduser --home=/home/odoo --disabled-password --gecos "" --shell=/bin/bash odoo
 RUN echo 'root:odoo' |chpasswd
 
 # Create odoo-server.conf
 ADD odoo-server.conf /odoo-server.conf
-RUN chown -R odoo:odoo /odoo-server.conf
-RUN chmod +x /odoo-server.conf
-
-# Add log directory
-RUN mkdir -p /var/log/odoo && \
-    chown odoo:root /var/log/odoo
-
-# Add filestorage folder
-RUN /bin/bash -c "mkdir -p /home/odoo/filestorage"
-RUN chown odoo /home/odoo/filestorage
-RUN chown odoo:odoo -R /home/odoo
-
-VOLUME ["/home/odoo/", "/var/log/odoo"]
+RUN chown odoo /odoo-server.conf && \
+    chmod +x /odoo-server.conf
 
 USER odoo
 
