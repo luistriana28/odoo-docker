@@ -21,73 +21,91 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     aptitude \
+    antiword \
     build-essential \
-    fontconfig \
+    gcc \
+    ghostscript \
     git \
-    libevent-dev \
-    libjpeg-dev \
-    libldap2-dev \
-    libsasl2-dev \
-    libpq-dev \
-    libx11-6 \
-    libxext6 \
-    libxml2-dev \
-    libxrender1 \
-    libxslt-dev \
+    graphviz \
+    lptools \
+    make \
+    mc \
     nano \
-    npm \
-    nodejs \
-    node-less \
+    openssh-server \
     openssl \
-    postgresql-server-dev-9.5 \
+    poppler-utils \
     postgresql-9.5 \
     postgresql-client-9.5 \
     postgresql-contrib-9.5 \
-    python \
+    postgresql-server-dev-9.5 \
+    python-babel \
+    python-dateutil \
     python-dev \
-    python-pip \
+    python-docutils \
+    python-egenix-mxdatetime \
+    python-feedparser \
+    python-gdata \
     python-imaging \
-    python-libxml2 \
-    python-pandas \
+    python-jinja2 \
+    python-ldap \
+    python-libxslt1 \
+    python-lxml \
+    python-mako \
+    python-matplotlib \
+    python-mock \
+    python-openid \
+    python-openssl \
+    python-paramiko \
+    python-pdftools \
+    python-pip \
+    python-psutil \
     python-psycopg2 \
-    xfonts-75dpi \
-    xfonts-base \
+    python-pybabel \
+    python-pychart \
+    python-pydot \
+    python-pyparsing \
     python-qrtools \
-    openssh-server \
-    swig \
-    xmlstarlet \
-    xsltproc
+    python-reportlab \
+    python-reportlab-accel \
+    python-setuptools \
+    python-simplejson \
+    python-soappy \
+    python-tz \
+    python-unittest2 \
+    python-vatnumber \
+    python-vobject \
+    python-webdav \
+    python-werkzeug \
+    python-xlwt \
+    python-yaml \
+    python-zbar \
+    python-zsi \
+    qrencode \
+    wget \
+    xmlstarlet \ 
+    xsltproc \
+    zbar-tools
 
-    # Install wkhtmltopdf
+# Install wkhtmltopdf
 RUN cd /tmp && \
-    wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
-
-# Install nodejs
-RUN ln -s /usr/bin/nodejs /usr/bin/node && \
-    npm install -g less less-plugin-clean-css
-
-# Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
-RUN cd /tmp && \
-    wget -q https://raw.githubusercontent.com/odoo/odoo/9.0/requirements.txt && \
-    pip install -r requirements.txt
-
-#Python Libraries
-RUN pip install SOAPpy suds xmltodict simplejson M2Crypto
+    wget http://download.gna.org/wkhtmltopdf/obsolete/linux/wkhtmltopdf-0.9.9-static-amd64.tar.bz2 && \
+    tar xvjf wkhtmltopdf-0.9.9-static-amd64.tar.bz2 && \ 
+    mv wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf && \
+    chmod +x /usr/bin/wkhtmltopdf
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 # Add ODOO user
-RUN adduser --home=/home/odoo-9.0/ --disabled-password --gecos "" --shell=/bin/bash odoo
+RUN adduser --home=/home/odoo-7.0/ --disabled-password --gecos "" --shell=/bin/bash odoo
 RUN echo 'root:odoo**' | chpasswd 
 RUN echo "odoo ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
 
 # Create odoo-server.conf
-ADD files/odoo-server.conf /home/odoo-9.0/odoo-server.conf
-RUN chown odoo /home/odoo-9.0/odoo-server.conf && \
-    chmod +x /home/odoo-9.0/odoo-server.conf
+ADD files/odoo-server.conf /home/odoo-7.0/odoo-server.conf
+RUN chown odoo /home/odoo-7.0/odoo-server.conf && \
+    chmod +x /home/odoo-7.0/odoo-server.conf
 
 # Create odoo-server service
 ADD files/odoo-server /etc/init.d/odoo-server
@@ -95,8 +113,8 @@ RUN chown odoo /etc/init.d/odoo-server && \
     chmod +x /etc/init.d/odoo-server
 
 #Install Odoo
-RUN cd /home/odoo-9.0/ && git clone -b 9.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo /home/odoo-9.0/odoo && chmod +x /home/odoo-9.0/odoo
+RUN cd /home/odoo-7.0/ && git clone -b 7.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
+RUN chown -R odoo /home/odoo-7.0/odoo && chmod +x /home/odoo-7.0/odoo
 
 USER postgres
 
@@ -105,8 +123,6 @@ RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
 USER odoo
-RUN sudo service postgresql start
-RUN sudo /etc/init.d/odoo-server start
 
 CMD /bin/bash
 
