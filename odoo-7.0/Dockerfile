@@ -123,6 +123,8 @@ RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
 USER odoo
+RUN sudo service postgresql start
+RUN sudo service ssh start
 
 CMD /bin/bash
 

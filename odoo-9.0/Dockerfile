@@ -107,7 +107,6 @@ RUN /etc/init.d/postgresql start && \
 USER odoo
 RUN sudo service postgresql start
 RUN sudo service ssh start
-RUN sudo /etc/init.d/odoo-server start
 
 CMD /bin/bash
 
