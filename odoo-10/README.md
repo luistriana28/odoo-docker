@@ -1,4 +1,4 @@
-Odoo 9.0
+Odoo 10.0
 ========
 
 This docker image is for Odoo 10.0
