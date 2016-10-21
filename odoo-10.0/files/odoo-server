@@ -13,7 +13,7 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/local/bin
 # Change the Odoo source files location according your needs.
-DAEMON=/home/odoo-10/odoo/openerp-server
+DAEMON=/home/odoo-10.0/odoo/openerp-server
 # Use the name convention of your choice
 NAME=odoo-server
 DESC=odoo-server
@@ -22,7 +22,7 @@ DESC=odoo-server
 USER=odoo
 
 # Specify an alternate config file (Default: /etc/odoo-server.conf).
-CONFIGFILE="/home/odoo-10/odoo-server.conf"
+CONFIGFILE="/home/odoo-10.0/odoo-server.conf"
 
 # pidfile
 PIDFILE=/var/run/$NAME.pid

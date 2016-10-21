@@ -78,15 +78,15 @@ RUN pip install pyopenssl suds m2crypto pillow qrcode xmltodict xlrd cfdilib==0.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 # Add ODOO user
-RUN adduser --home=/home/odoo-10/ --disabled-password --gecos "" --shell=/bin/bash odoo
+RUN adduser --home=/home/odoo-10.0/ --disabled-password --gecos "" --shell=/bin/bash odoo
 RUN echo 'root:odoo**' | chpasswd 
 RUN echo "odoo ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
 
 # Create odoo-server.conf
 ADD files/odoo-server.conf /home/odoo-10/odoo-server.conf
-RUN chown odoo /home/odoo-10/odoo-server.conf && \
-    chmod +x /home/odoo-10/odoo-server.conf
+RUN chown odoo /home/odoo-10.0/odoo-server.conf && \
+    chmod +x /home/odoo-10.0/odoo-server.conf
 
 # Create odoo-server service
 ADD files/odoo-server /etc/init.d/odoo-server
@@ -94,8 +94,8 @@ RUN chown odoo /etc/init.d/odoo-server && \
     chmod +x /etc/init.d/odoo-server
 
 #Install Odoo
-RUN cd /home/odoo-10/ && git clone -b 10.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo /home/odoo-10/odoo && chmod +x /home/odoo-10/odoo
+RUN cd /home/odoo-10.0/ && git clone -b 10.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
+RUN chown -R odoo /home/odoo-10.0/odoo && chmod +x /home/odoo-10.0/odoo
 
 USER postgres
 
