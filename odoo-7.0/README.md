@@ -1,4 +1,4 @@
-Odoo 9.0
+Odoo 7.0
 ========
 
 This docker image is for Odoo 7.0
