@@ -13,6 +13,7 @@ After your container is built, you have to turn on Postgres Service & SSH Server
 
     sudo service postgresql start
     sudo service ssh start
+    
 And run Odoo service, with the 2 known options:
      
     sudo service odoo-server start

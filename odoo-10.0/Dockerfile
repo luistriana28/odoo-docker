@@ -53,6 +53,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
     xfonts-75dpi \
     xfonts-base \
     python-qrtools \
+    python-openssl \
     openssh-server \
     swig \
     xmlstarlet \
@@ -72,7 +73,19 @@ RUN cd /tmp && \
     pip install -r requirements.txt
 
 #Python Libraries
-RUN pip install pyopenssl suds m2crypto pillow qrcode xmltodict xlrd cfdilib==0.2.2 pytz jinja2 json2html odoorpc ofxparse num2words
+RUN pip install suds \
+    M2Crypto \
+    pillow \
+    qrcode \
+    xmltodict \
+    xlrd \
+    cfdilib==0.2.2 \
+    pytz \
+    jinja2 \
+    json2html \
+    odoorpc \
+    ofxparse \
+    num2words
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
@@ -84,7 +97,7 @@ RUN echo "odoo ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
 
 # Create odoo-server.conf
-ADD files/odoo-server.conf /home/odoo-10/odoo-server.conf
+ADD files/odoo-server.conf /home/odoo-10.0/odoo-server.conf
 RUN chown odoo /home/odoo-10.0/odoo-server.conf && \
     chmod +x /home/odoo-10.0/odoo-server.conf
 
