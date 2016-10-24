@@ -88,6 +88,12 @@ ADD files/odoo-server.conf /home/odoo-9.0/odoo-server.conf
 RUN chown odoo /home/odoo-9.0/odoo-server.conf && \
     chmod +x /home/odoo-9.0/odoo-server.conf
 
+# Create Postgres database backup
+RUN mkdir -p /opt/odoo/
+ADD files/db_backup.sh /opt/odoo/db_backup.sh
+RUN chown odoo /opt/odoo/db_backup.sh && \
+    chmod +x /opt/odoo/db_backup.sh
+
 # Create odoo-server service
 ADD files/odoo-server /etc/init.d/odoo-server
 RUN chown odoo /etc/init.d/odoo-server && \
@@ -104,8 +110,6 @@ RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
 USER odoo
-RUN sudo service postgresql start
-RUN sudo service ssh start
 
 CMD /bin/bash
 

@@ -118,8 +118,6 @@ RUN /etc/init.d/postgresql start && \
 
 USER odoo
 
-CMD sudo /etc/init.d/postgresql start
-CMD sudo /etc/init.d/ssh start
 CMD /bin/bash
 
 
