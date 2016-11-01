@@ -89,10 +89,10 @@ RUN chown odoo /home/odoo-9.0/odoo-server.conf && \
     chmod +x /home/odoo-9.0/odoo-server.conf
 
 # Create Postgres database backup
-RUN mkdir -p /opt/odoo/
-ADD files/db_backup.sh /opt/odoo/db_backup.sh
-RUN chown odoo /opt/odoo/db_backup.sh && \
-    chmod +x /opt/odoo/db_backup.sh
+RUN mkdir -p /home/odoo-9.0/.backup/
+ADD files/db_backup.sh /home/odoo-9.0/.backup/db_backup.sh
+RUN chown odoo /home/odoo-9.0/.backup/db_backup.sh && \
+    chmod +x /home/odoo-9.0/.backup/db_backup.sh
 
 # Create odoo-server service
 ADD files/odoo-server /etc/init.d/odoo-server
@@ -111,8 +111,9 @@ RUN /etc/init.d/postgresql start && \
 
 USER odoo
 
+CMD ["usr/bin/service","postgresql", "start"]
+CMD ["usr/bin/service", "odoo-server", "start"]
 CMD /bin/bash
-
 
 EXPOSE 8069
 EXPOSE 8072

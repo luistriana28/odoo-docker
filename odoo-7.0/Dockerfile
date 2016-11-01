@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:12.04
 MAINTAINER Luis Triana <luis.triana@jarsa.com.mx>
 
 RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf \
@@ -15,7 +15,7 @@ ENV TERM xterm
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     wget
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
     sudo apt-key add -
 RUN apt-get update -q && apt-get upgrade -q && \
@@ -34,10 +34,10 @@ RUN apt-get update -q && apt-get upgrade -q && \
     openssh-server \
     openssl \
     poppler-utils \
-    postgresql-9.5 \
-    postgresql-client-9.5 \
-    postgresql-contrib-9.5 \
-    postgresql-server-dev-9.5 \
+    postgresql-9.4 \
+    postgresql-client-9.4 \
+    postgresql-contrib-9.4 \
+    postgresql-server-dev-9.4 \
     python-babel \
     python-dateutil \
     python-dev \
@@ -124,6 +124,8 @@ RUN /etc/init.d/postgresql start && \
 
 USER odoo
 
+CMD ["usr/bin/service","postgresql", "start"]
+CMD ["usr/bin/service", "odoo-server", "start"]
 CMD /bin/bash
 
 EXPOSE 8069
