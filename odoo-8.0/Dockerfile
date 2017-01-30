@@ -104,6 +104,9 @@ USER postgres
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
+# Change Ownership to Odoo User
+RUN chown -R odoo:odoo /home/odoo-8.0
+
 USER odoo
 
 CMD /bin/bash
@@ -112,3 +115,4 @@ CMD /bin/bash
 EXPOSE 8069
 EXPOSE 8072
 EXPOSE 22
+EXPOSE 5432

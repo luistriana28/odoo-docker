@@ -74,18 +74,22 @@ RUN cd /tmp && \
 
 #Python Libraries
 RUN pip install suds \
+    pyopenssl \
     M2Crypto \
     pillow \
     qrcode \
     xmltodict \
     xlrd \
-    cfdilib==0.2.2 \
+    cfdilib \
     pytz \
     jinja2 \
     json2html \
     odoorpc \
     ofxparse \
-    num2words
+    num2words \
+    boto3 \
+    cryptography \
+    OpenSSL
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
@@ -116,6 +120,9 @@ USER postgres
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
+# Change Ownership to Odoo User
+RUN chown -R odoo:odoo /home/odoo-10.0
+
 USER odoo
 
 CMD /bin/bash
@@ -124,3 +131,4 @@ CMD /bin/bash
 EXPOSE 8069
 EXPOSE 8072
 EXPOSE 22
+EXPOSE 5432

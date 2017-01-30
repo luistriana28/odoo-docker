@@ -58,7 +58,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
     xmlstarlet \
     xsltproc
 
-    # Install wkhtmltopdf
+# Install wkhtmltopdf
 RUN cd /tmp && \
     wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
@@ -72,7 +72,25 @@ RUN cd /tmp && \
     pip install -r requirements.txt
 
 #Python Libraries
-RUN pip install SOAPpy suds xmltodict simplejson M2Crypto
+RUN pip install suds \
+    pyopenssl \
+    M2Crypto \
+    pillow \
+    qrcode \
+    xmltodict \
+    xlrd \
+    cfdilib \
+    pytz 
+    jinja2 \
+    json2html \
+    odoorpc \
+    ofxparse \
+    num2words \
+    boto3 \
+    cryptography \
+    SOAPpy \
+    simplejson \
+    OpenSSL
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
@@ -109,6 +127,9 @@ USER postgres
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
+# Change Ownership to Odoo User
+RUN chown -R odoo:odoo /home/odoo-9.0
+
 USER odoo
 
 CMD ["usr/bin/service","postgresql", "start"]
@@ -118,3 +139,4 @@ CMD /bin/bash
 EXPOSE 8069
 EXPOSE 8072
 EXPOSE 22
+EXPOSE 5432

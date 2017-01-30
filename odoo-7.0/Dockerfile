@@ -15,9 +15,8 @@ ENV TERM xterm
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     wget
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-    sudo apt-key add -
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     aptitude \
@@ -34,10 +33,10 @@ RUN apt-get update -q && apt-get upgrade -q && \
     openssh-server \
     openssl \
     poppler-utils \
-    postgresql-9.4 \
-    postgresql-client-9.4 \
-    postgresql-contrib-9.4 \
-    postgresql-server-dev-9.4 \
+    postgresql-9.5 \
+    postgresql-client-9.5 \
+    postgresql-contrib-9.5 \
+    postgresql-server-dev-9.5 \
     python-babel \
     python-dateutil \
     python-dev \
@@ -122,6 +121,9 @@ USER postgres
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
 
+# Change Ownership to Odoo User
+RUN chown -R odoo:odoo /home/odoo-7.0
+
 USER odoo
 
 CMD ["usr/bin/service","postgresql", "start"]
@@ -131,3 +133,4 @@ CMD /bin/bash
 EXPOSE 8069
 EXPOSE 8072
 EXPOSE 22
+EXPOSE 5432
