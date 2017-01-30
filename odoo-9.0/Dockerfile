@@ -28,6 +28,9 @@ RUN apt-get update -q && apt-get upgrade -q && \
     libjpeg-dev \
     libldap2-dev \
     libsasl2-dev \
+    libssl-dev \
+    libffi-dev \
+    python-dev \
     libpq-dev \
     libx11-6 \
     libxext6 \
@@ -53,6 +56,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
     xfonts-75dpi \
     xfonts-base \
     python-qrtools \
+    python-openssl \
     openssh-server \
     swig \
     xmlstarlet \
@@ -80,17 +84,14 @@ RUN pip install suds \
     xmltodict \
     xlrd \
     cfdilib \
-    pytz 
+    pytz \
     jinja2 \
     json2html \
     odoorpc \
     ofxparse \
     num2words \
     boto3 \
-    cryptography \
-    SOAPpy \
-    simplejson \
-    OpenSSL
+    cryptography
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*

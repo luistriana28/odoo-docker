@@ -28,6 +28,9 @@ RUN apt-get update -q && apt-get upgrade -q && \
     libjpeg-dev \
     libldap2-dev \
     libsasl2-dev \
+    libssl-dev \
+    libffi-dev \
+    python-dev \
     libpq-dev \
     libx11-6 \
     libxext6 \
@@ -88,8 +91,7 @@ RUN pip install suds \
     ofxparse \
     num2words \
     boto3 \
-    cryptography \
-    OpenSSL
+    cryptography 
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
@@ -126,7 +128,6 @@ RUN chown -R odoo:odoo /home/odoo-10.0
 USER odoo
 
 CMD /bin/bash
-
 
 EXPOSE 8069
 EXPOSE 8072

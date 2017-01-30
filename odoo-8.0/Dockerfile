@@ -111,7 +111,6 @@ USER odoo
 
 CMD /bin/bash
 
-
 EXPOSE 8069
 EXPOSE 8072
 EXPOSE 22
