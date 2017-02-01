@@ -30,7 +30,6 @@ RUN apt-get update -q && apt-get upgrade -q && \
     libsasl2-dev \
     libssl-dev \
     libffi-dev \
-    python-dev \
     libpq-dev \
     libx11-6 \
     libxext6 \
@@ -73,10 +72,11 @@ RUN ln -s /usr/bin/nodejs /usr/bin/node && npm install -g less less-plugin-clean
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
     wget -q https://raw.githubusercontent.com/odoo/odoo/9.0/requirements.txt && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && pip install --upgrade pip
 
 #Python Libraries
 RUN pip install suds \
+    pycrypto \
     pyopenssl \
     M2Crypto \
     pillow \
@@ -120,16 +120,13 @@ RUN chown odoo /etc/init.d/odoo-server && \
 
 #Install Odoo
 RUN cd /home/odoo-9.0/ && git clone -b 9.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo /home/odoo-9.0/odoo && chmod +x /home/odoo-9.0/odoo
+RUN chown -R odoo /home/odoo-9.0/ && chmod +x /home/odoo-9.0/odoo
 
 USER postgres
 
 # Run Postgres Server
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
-
-# Change Ownership to Odoo User
-RUN chown -R odoo:odoo /home/odoo-9.0
 
 USER odoo
 

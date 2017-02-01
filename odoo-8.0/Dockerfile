@@ -96,16 +96,13 @@ RUN chown odoo /etc/init.d/odoo-server && \
 
 #Install Odoo
 RUN cd /home/odoo-8.0/ && git clone -b 8.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo /home/odoo-8.0/odoo && chmod +x /home/odoo-8.0/odoo
+RUN chown -R odoo /home/odoo-8.0/ && chmod +x /home/odoo-8.0/odoo
 
 USER postgres
 
 # Run Postgres Server
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
-
-# Change Ownership to Odoo User
-RUN chown -R odoo:odoo /home/odoo-8.0
 
 USER odoo
 
