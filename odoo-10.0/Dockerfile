@@ -30,7 +30,6 @@ RUN apt-get update -q && apt-get upgrade -q && \
     libsasl2-dev \
     libssl-dev \
     libffi-dev \
-    python-dev \
     libpq-dev \
     libx11-6 \
     libxext6 \
@@ -60,8 +59,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
     openssh-server \
     swig \
     xmlstarlet \
-    xsltproc \
-    python-crypto
+    xsltproc 
 
     # Install wkhtmltopdf
 RUN cd /tmp && \
@@ -74,7 +72,7 @@ RUN ln -s /usr/bin/nodejs /usr/bin/node && npm install -g less less-plugin-clean
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
     wget -q https://raw.githubusercontent.com/odoo/odoo/10.0/requirements.txt && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && pip install --upgrade pip
 
 #Python Libraries
 RUN pip install suds \
