@@ -85,6 +85,7 @@ RUN pip install suds \
     xlrd \
     cfdilib \
     pytz \
+    pysftp \
     jinja2 \
     json2html \
     odoorpc \
