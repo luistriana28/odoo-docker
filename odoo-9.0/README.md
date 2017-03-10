@@ -18,4 +18,4 @@ The backup script is not activated, you can set your better hour for backups.
 Create daily cronjobs in /etc/crontab. The backup runs daily at 1am.
     
     # m h dom mon dow user  command
-    0 1 * * * postgres /home/odoo-9.0/.data/db_backup.sh
+    #0 1 * * * postgres /home/odoo-9.0/.data/db_backup.sh
