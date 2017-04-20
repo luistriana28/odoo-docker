@@ -15,13 +15,14 @@ ENV TERM xterm
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     wget
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+RUN wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     aptitude \
     antiword \
     build-essential \
+    sudo \
     gcc \
     ghostscript \
     git \
@@ -63,7 +64,6 @@ RUN apt-get update -q && apt-get upgrade -q && \
     python-pychart \
     python-pydot \
     python-pyparsing \
-    python-qrtools \
     python-reportlab \
     python-reportlab-accel \
     python-setuptools \
@@ -81,7 +81,8 @@ RUN apt-get update -q && apt-get upgrade -q && \
     python-zsi \
     qrencode \
     wget \
-    xmlstarlet \ 
+    xmlstarlet \
+    sudo \ 
     xsltproc \
     zbar-tools
 
@@ -98,8 +99,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 # Add ODOO user
 RUN adduser --home=/home/odoo-7.0/ --disabled-password --gecos "" --shell=/bin/bash odoo
 RUN echo 'root:odoo**' | chpasswd 
-RUN echo "odoo ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/user && \
-    chmod 0440 /etc/sudoers.d/user
+RUN echo "odoo ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
 
 # Create odoo-server.conf
 ADD files/odoo-server.conf /home/odoo-7.0/odoo-server.conf
@@ -112,17 +112,14 @@ RUN chown odoo /etc/init.d/odoo-server && \
     chmod +x /etc/init.d/odoo-server
 
 #Install Odoo
-RUN cd /home/odoo-7.0/ && git clone -b 7.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo /home/odoo-7.0/odoo && chmod +x /home/odoo-7.0/odoo
+RUN cd /home/odoo-7.0/ && git clone https://github.com/odoo/odoo.git -b 7.0 odoo
+RUN chown -R odoo:odoo /home/odoo-7.0 && chmod +x /home/odoo-7.0/odoo
 
 USER postgres
 
 # Run Postgres Server
 RUN /etc/init.d/postgresql start && \
     psql --command "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
-
-# Change Ownership to Odoo User
-RUN chown -R odoo:odoo /home/odoo-7.0
 
 USER odoo
 
