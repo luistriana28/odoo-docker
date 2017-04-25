@@ -1,4 +1,4 @@
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 MAINTAINER Luis Triana <luis.triana@jarsa.com.mx>
 
 RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf \
@@ -92,6 +92,11 @@ RUN cd /tmp && \
     tar xvjf wkhtmltopdf-0.9.9-static-amd64.tar.bz2 && \ 
     mv wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf && \
     chmod +x /usr/bin/wkhtmltopdf
+
+#Install QR tools
+RUN cd /tmp && \
+    wget https://launchpad.net/qr-tools/trunk/1.2/+download/python-qrtools_1.2_all.deb && \
+    dpkg -i python-qrtools_1.2_all.deb
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
