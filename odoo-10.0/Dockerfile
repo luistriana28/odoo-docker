@@ -115,7 +115,7 @@ RUN chown odoo /etc/init.d/odoo-server && \
 
 #Install Odoo
 RUN cd /home/odoo-10.0/ && git clone -b 10.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo /home/odoo-10.0/ && chmod +x /home/odoo-10.0/odoo
+RUN chown -R odoo:odoo /home/ && chmod +x /home/odoo-10.0/odoo
 
 USER postgres
 
