@@ -60,7 +60,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
 
     # Install wkhtmltopdf
 RUN cd /tmp && \
-    wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
+    wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Install nodejs

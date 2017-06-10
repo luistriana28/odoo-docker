@@ -88,7 +88,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
 
 # Install wkhtmltopdf
 RUN cd /tmp && \
-    wget http://download.gna.org/wkhtmltopdf/obsolete/linux/wkhtmltopdf-0.9.9-static-amd64.tar.bz2 && \
+    wget https://downloads.wkhtmltopdf.org/obsolete/linux/wkhtmltopdf-0.9.9-static-amd64.tar.bz2 && \
     tar xvjf wkhtmltopdf-0.9.9-static-amd64.tar.bz2 && \ 
     mv wkhtmltopdf-amd64 /usr/bin/wkhtmltopdf && \
     chmod +x /usr/bin/wkhtmltopdf
