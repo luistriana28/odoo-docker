@@ -50,7 +50,7 @@ RUN apt-get update -q && apt-get upgrade -q && \
     xfonts-75dpi \
     xfonts-base \
     xmlstarlet \
-    xsltproc \ 
+    xsltproc \
     xz-utils
 
 # Install wkhtmltopdf

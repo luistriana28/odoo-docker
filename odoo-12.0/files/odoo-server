@@ -14,10 +14,10 @@
 . /lib/lsb/init-functions
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
-DAEMON=/home/odoo-9.0/odoo/odoo.py
+DAEMON=/home/odoo-12.0/odoo/odoo-bin
 NAME=odoo
 DESC=odoo
-CONFIG=/home/odoo-9.0/odoo-server.conf
+CONFIG=/home/odoo-12.0/odoo-server.conf
 LOGFILE=/home/.local/log/Odoo/odoo-server.log
 PIDFILE=/var/run/${NAME}.pid
 USER=odoo
