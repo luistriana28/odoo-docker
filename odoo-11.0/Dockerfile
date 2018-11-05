@@ -61,10 +61,6 @@ RUN cd /tmp && \
     && cp wkhtmltox/bin/* /usr/local/bin/ \
     && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/
 
-
-# Install nodejs
-RUN ln -s /usr/bin/nodejs /usr/bin/node && npm install -g less less-plugin-clean-css
-
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
     wget -q https://raw.githubusercontent.com/luistriana28/odoo/11.0/requirements.txt && \
