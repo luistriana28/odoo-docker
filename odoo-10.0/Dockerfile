@@ -66,9 +66,6 @@ RUN cd /tmp && \
     wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
-# Install nodejs
-RUN ln -s /usr/bin/nodejs /usr/bin/node && npm install -g less less-plugin-clean-css
-
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
     wget -q https://raw.githubusercontent.com/odoo/odoo/10.0/requirements.txt && \
