@@ -92,6 +92,10 @@ RUN mkdir -p /home/odoo-12.0/extra-addons \
         && chown -R odoo /home/odoo-12.0/extra-addons
 VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-12.0/extra-addons"]
 
+# Add entrypoint file and give execute permission
+ADD files/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 USER postgres
 
 # Run Postgres Server
@@ -100,7 +104,7 @@ RUN /etc/init.d/postgresql start && \
 
 USER odoo
 
-CMD /bin/bash
+CMD /entrypoint.sh
 
 EXPOSE 8069
 EXPOSE 8072
