@@ -96,6 +96,14 @@ VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-12.0/extra-addons"]
 ADD files/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Correct error with ssl-cert permissions for Postgres
+RUN mkdir /etc/ssl/private-copy && \
+    mv /etc/ssl/private/* /etc/ssl/private-copy/ && \
+    rm -r /etc/ssl/private && \
+    mv /etc/ssl/private-copy /etc/ssl/private && \
+    chmod -R 0700 /etc/ssl/private && \
+    chown -R postgres /etc/ssl/private
+
 USER postgres
 
 # Run Postgres Server
