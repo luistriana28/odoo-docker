@@ -1,57 +1,51 @@
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 MAINTAINER Luis Triana <luis.triana@jarsa.com.mx>
 
 RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf \
     && echo 'APT::Get::force-yes "true";' >> /etc/apt/apt.conf
 RUN apt-get update \
-    && apt-get install language-pack-es -y \
+    && apt-get install sudo gnupg language-pack-es -y \
     && locale-gen "en_US.UTF-8" "fr_FR.UTF-8"
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
     PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
     wget
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
     sudo apt-key add -
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
-    aptitude \
-    build-essential \
-    curl \
-    fontconfig \
-    gdebi-core \
-    git \
-    libevent-dev \
-    libffi-dev \
-    libjpeg-dev \
-    libldap2-dev \
-    libpq-dev \
-    libsasl2-dev \
-    libssl-dev \
-    libx11-6 \
-    libxext6 \
-    libxml2-dev \
-    libxrender1 \
-    libxslt-dev \
-    nano \
-    node-less \
-    nodejs \
-    npm \
-    openssh-server \
-    openssl \
-    postgresql-9.5 \
-    postgresql-client-9.5 \
-    postgresql-contrib-9.5 \
-    postgresql-server-dev-9.5 \
-    python3 \
-    python3-pip \
-    swig \
-    xfonts-75dpi \
-    xfonts-base \
-    xmlstarlet \
-    xsltproc \
-    xz-utils
+        aptitude \
+        build-essential \
+        curl \
+        git \
+        nano \
+        openssl \
+        python3 \
+        python3-pip \
+        python3-dev \
+        postgresql-9.6 \
+        postgresql-client-9.6 \
+        postgresql-contrib-9.6 \
+        postgresql-server-dev-9.6 \
+        openssh-server \
+        npm \
+        nodejs \
+        nodejs-dev \
+        node-gyp \
+        node-less \
+        openssl \
+        libldap2-dev \
+        libssl1.0-dev \
+        libevent-dev \
+        libsasl2-dev \
+        libxml2-dev \
+        libxslt-dev \
+        swig \
+        xmlstarlet \
+        xsltproc \
+        xz-utils
 
 # Install wkhtmltopdf
 RUN cd /tmp && \
@@ -63,50 +57,11 @@ RUN cd /tmp && \
 
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
-    wget -q https://raw.githubusercontent.com/luistriana28/odoo/11.0/requirements.txt && \
+    wget -q https://raw.githubusercontent.com/odoo/odoo/11.0/requirements.txt && \
     pip3 install -r requirements.txt && pip3 install --upgrade pip
 
-#Python Libraries
-RUN apt-get install python-dateutil \
-    python-decorator \
-    python-docutils \
-    python-feedparser \
-    python-jinja2 \
-    python-ldap \
-    python-libxslt1 \
-    python-lxml \
-    python-mako \
-    python-mock \
-    python-openid \
-    python-passlib \
-    python-pil \
-    python-pip \
-    python-psutil \
-    python-psycopg2 \
-    python-pybabel \
-    python-pychart \
-    python-pydot \
-    python-pyparsing \
-    python-pypdf \
-    python-reportlab \
-    python-requests \
-    python-simplejson \
-    python-tz \
-    python-unittest2 \
-    python-vatnumber \
-    python-vobject \
-    python-webdav \
-    python-werkzeug \
-    python-xlwt \
-    python-yaml \
-    python-zsi \
-    python3-dev \
-    python3-imaging \
-    python3-openssl \
-    python3-pandas \
-    python3-psycopg2 \
-    python3-renderpm \
-    python3-setuptools 
+##Python Libraries
+RUN pip3 install vobject qrcode pyldap num2words 
 
 
 #Python3 Libraries
@@ -148,6 +103,24 @@ RUN chown odoo /etc/init.d/odoo-server && \
 #Install Odoo
 RUN cd /home/odoo-11.0/ && git clone -b 11.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
 RUN chown -R odoo:odoo /home/ && chmod +x /home/odoo-11.0/odoo
+RUN mkdir -p /home/.local/share/Odoo/filestore && \
+    chown -R odoo:odoo /home/.local/share/Odoo/filestore
+
+RUN mkdir -p /home/odoo-11.0/extra-addons \
+        && chown -R odoo /home/odoo-11.0/extra-addons
+VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-11.0/extra-addons"]
+
+# Add entrypoint file and give execute permission
+ADD files/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Correct error with ssl-cert permissions for Postgres
+RUN mkdir /etc/ssl/private-copy && \
+    mv /etc/ssl/private/* /etc/ssl/private-copy/ && \
+    rm -r /etc/ssl/private && \
+    mv /etc/ssl/private-copy /etc/ssl/private && \
+    chmod -R 0700 /etc/ssl/private && \
+    chown -R postgres /etc/ssl/private
 
 USER postgres
 
@@ -157,7 +130,7 @@ RUN /etc/init.d/postgresql start && \
 
 USER odoo
 
-CMD /bin/bash
+CMD /entrypoint.sh
 
 EXPOSE 8069
 EXPOSE 8072
