@@ -108,7 +108,7 @@ RUN mkdir -p /home/.local/share/Odoo/filestore && \
 
 RUN mkdir -p /home/odoo-11.0/extra-addons \
         && chown -R odoo /home/odoo-11.0/extra-addons
-VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-11.0/extra-addons"]
+VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-11.0/extra-addons", "/home/odoo-11.0/"]
 
 # Add entrypoint file and give execute permission
 ADD files/entrypoint.sh /entrypoint.sh

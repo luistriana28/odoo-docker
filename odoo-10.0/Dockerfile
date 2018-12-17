@@ -112,10 +112,12 @@ RUN chown odoo /etc/init.d/odoo-server && \
 #Install Odoo
 RUN cd /home/odoo-10.0/ && git clone -b 10.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
 RUN chown -R odoo:odoo /home/ && chmod +x /home/odoo-10.0/odoo
+RUN mkdir -p /home/.local/share/Odoo/filestore && \
+    chown -R odoo:odoo /home/.local/share/Odoo/filestore
 
 RUN mkdir -p /home/odoo-10.0/extra-addons \
         && chown -R odoo /home/odoo-10.0/extra-addons
-VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-10.0/extra-addons"]
+VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-10.0/extra-addons", "/home/odoo-10.0/"]
 
 # Add entrypoint file and give execute permission
 ADD files/entrypoint.sh /entrypoint.sh
