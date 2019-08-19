@@ -14,34 +14,40 @@ RUN apt-get update -q && apt-get upgrade -q && \
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
     sudo apt-key add -
+RUN echo 'deb http://security.ubuntu.com/ubuntu xenial-security main' >> /etc/apt/sources.list
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
         aptitude \
         build-essential \
         curl \
+        fontconfig \
         git \
+        libevent-dev \
+        libfontconfig1 \
+        libjpeg-turbo8 \
+        libldap2-dev \
+        libpng12-0 \
+        libsasl2-dev \
+        libssl1.0-dev \
+        libxml2-dev \
+        libxrender1 \
+        libxslt-dev \
         nano \
+        node-gyp \
+        node-less \
+        nodejs \
+        nodejs-dev \
+        npm \
+        openssh-server \
         openssl \
-        python3 \
-        python3-pip \
-        python3-dev \
+        openssl \
         postgresql-9.6 \
         postgresql-client-9.6 \
         postgresql-contrib-9.6 \
         postgresql-server-dev-9.6 \
-        openssh-server \
-        npm \
-        nodejs \
-        nodejs-dev \
-        node-gyp \
-        node-less \
-        openssl \
-        libldap2-dev \
-        libssl1.0-dev \
-        libevent-dev \
-        libsasl2-dev \
-        libxml2-dev \
-        libxslt-dev \
+        python3 \
+        python3-dev \
+        python3-pip \
         swig \
         xmlstarlet \
         xsltproc \
@@ -49,11 +55,8 @@ RUN apt-get update -q && apt-get upgrade -q && \
 
 # Install wkhtmltopdf
 RUN cd /tmp && \
-    curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && tar xvf wkhtmltox.tar.xz \
-    && cp wkhtmltox/lib/* /usr/local/lib/ \
-    && cp wkhtmltox/bin/* /usr/local/bin/ \
-    && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/
+    wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb \
+    && dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \
