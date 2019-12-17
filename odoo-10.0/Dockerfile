@@ -1,70 +1,69 @@
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 MAINTAINER Luis Triana <luis.triana@jarsa.com.mx>
 
-RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf \
-    && echo 'APT::Get::force-yes "true";' >> /etc/apt/apt.conf
-RUN locale-gen fr_FR \
-    && locale-gen en_US.UTF-8 \
-    && dpkg-reconfigure locales \
-    && update-locale LANG=en_US.UTF-8 \
-    && update-locale LC_ALL=en_US.UTF-8
-RUN ln -s /usr/share/i18n/SUPPORTED /var/lib/locales/supported.d/all \
-    && locale-gen
-ENV PYTHONIOENCODING utf-8
-ENV TERM xterm
+RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf
+RUN apt-get update \
+    && apt-get install sudo gnupg language-pack-es -y \
+    && locale-gen "en_US.UTF-8" "fr_FR.UTF-8"
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8" LC_ALL="en_US.UTF-8" \
+    PYTHONIOENCODING="UTF-8" TERM="xterm" DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
-    wget
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
+        wget \
+        curl
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+RUN apt-get install -y nodejs
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN apt-get update && apt-get install yarn
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' >> /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
     sudo apt-key add -
+RUN echo 'deb http://security.ubuntu.com/ubuntu xenial-security main' >> /etc/apt/sources.list
 RUN apt-get update -q && apt-get upgrade -q && \
     apt-get install --allow-unauthenticated -q \
-    aptitude \
-    build-essential \
-    fontconfig \
-    git \
-    libevent-dev \
-    libjpeg-dev \
-    libldap2-dev \
-    libsasl2-dev \
-    libssl-dev \
-    libffi-dev \
-    libpq-dev \
-    libx11-6 \
-    libxext6 \
-    libxml2-dev \
-    libxrender1 \
-    libxslt-dev \
-    nano \
-    npm \
-    nodejs \
-    node-less \
-    openssl \
-    postgresql-server-dev-9.5 \
-    postgresql-9.5 \
-    postgresql-client-9.5 \
-    postgresql-contrib-9.5 \
-    python \
-    python-dev \
-    python-pip \
-    python-imaging \
-    python-libxml2 \
-    python-pandas \
-    python-psycopg2 \
-    xfonts-75dpi \
-    xfonts-base \
-    python-qrtools \
-    python-openssl \
-    openssh-server \
-    swig \
-    xmlstarlet \
-    xsltproc 
+        aptitude \
+        build-essential \
+        fontconfig \
+        git \
+        libevent-dev \
+        libjpeg-dev \
+        libldap2-dev \
+        libsasl2-dev \
+        libssl-dev \
+        libffi-dev \
+        libpq-dev \
+        libx11-6 \
+        libxext6 \
+        libxml2-dev \
+        libxrender1 \
+        libxslt-dev \
+        nano \
+        node-less \
+        openssl \
+        postgresql-server-dev-9.5 \
+        postgresql-9.5 \
+        postgresql-client-9.5 \
+        postgresql-contrib-9.5 \
+        python \
+        python-dev \
+        python-pip \
+        python-pil \
+        python-libxml2 \
+        python-pandas \
+        python-psycopg2 \
+        xfonts-75dpi \
+        xfonts-base \
+        python-qrtools \
+        python-openssl \
+        openssh-server \
+        swig \
+        xmlstarlet \
+        xsltproc 
 
     # Install wkhtmltopdf
 RUN cd /tmp && \
-    wget -O wkhtmltox-0.12.1_linux-trusty-amd64.deb https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+    wget -O wkhtmltox_0.12.5-1.bionic_amd64.deb https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb && \
+    dpkg -i wkhtmltox_0.12.5-1.bionic_amd64.deb
 
 # Download and install odoo requirements from github.com/odoo/odoo/requirements.txt
 RUN cd /tmp && \

@@ -1,8 +1,7 @@
 FROM ubuntu:18.04
 MAINTAINER Luis Triana <luis.triana@jarsa.com.mx>
 
-RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf \
-    && echo 'APT::Get::force-yes "true";' >> /etc/apt/apt.conf
+RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf
 RUN apt-get update \
     && apt-get install sudo gnupg language-pack-es -y \
     && locale-gen "en_US.UTF-8" "fr_FR.UTF-8"
