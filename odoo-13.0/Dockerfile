@@ -87,13 +87,20 @@ RUN chown odoo /home/odoo-13.0/odoo-server.conf && \
 
 #Install Odoo
 RUN cd /home/odoo-13.0/ && git clone -b 13.0 --single-branch --depth=1 https://github.com/odoo/odoo.git odoo
-RUN chown -R odoo:odoo /home/ && chmod +x /home/odoo-13.0/odoo
-RUN mkdir -p /home/.local/share/Odoo/filestore && \
-    chown -R odoo:odoo /home/.local/share/Odoo/filestore
+RUN chmod +x /home/odoo-13.0/odoo
+RUN mkdir -p /home/odoo-13.0/.local/share/Odoo/filestore && \
+    chown -R odoo:odoo /home/odoo-13.0/.local/share/Odoo/filestore
+
+#Odoo Log
+RUN mkdir -p /home/odoo-13.0/.local/log/Odoo && \
+    touch /home/odoo-13.0/.local/log/Odoo/odoo-server.log && \
+    chown odoo: -R /home/odoo-13.0/.local/log/Odoo && \
+    chmod -R 777 /home/odoo-13.0/.local/log/Odoo/odoo-server.log
 
 RUN mkdir -p /home/odoo-13.0/extra-addons \
-        && chown -R odoo /home/odoo-13.0/extra-addons
-VOLUME ["/home/.local/share/Odoo/filestore", "/home/odoo-13.0/extra-addons", "/home/odoo-13.0/"]
+        && chown -R odoo:odoo /home/odoo-13.0/extra-addons && \
+        chown -R odoo:odoo /home/odoo-13.0/
+VOLUME ["/home/odoo-13.0/"]
 
 # Add entrypoint file and give execute permission
 ADD files/entrypoint.sh /entrypoint.sh
