@@ -1,6 +1,8 @@
 Odoo Containers
 ================
 
+[![Build Status](https://travis-ci.org/luistriana28/odoo-docker.svg?branch=master)](https://travis-ci.org/luistriana28/odoo-docker)
+
 This docker image is for Odoo 10.0, 11.0 & 12.0
 
 After the download process is completed you can run the container:
