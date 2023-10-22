@@ -32,7 +32,9 @@ RUN apt-get update -q && apt-get upgrade -q && \
         gnupg \
         node-less \
         npm \
+        nano \
         python3-openssl \
+        openssh-server \
         openssl \
         python3-num2words \
         python3-pdfminer \
